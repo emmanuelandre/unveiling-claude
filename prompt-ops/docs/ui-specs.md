@@ -1,61 +1,117 @@
-# UI Specifications
+# PromptOps UI Specifications
+
+## Design System
+
+This application follows the **Dell Design System** for all UI implementation.
+
+**Reference:** https://www.delldesignsystem.com/getting-started/react
+
+All components, styling, typography, spacing, and interaction patterns should adhere to the Dell Design System guidelines to ensure consistency and accessibility.
+
+---
 
 ## Design Principles
 
 | Principle | Description |
 |-----------|-------------|
-| **Clean & Minimal** | TailwindCSS for responsive design, whitespace for clarity |
+| **Clean & Minimal** | Responsive design with whitespace for clarity |
 | **Real-Time Feedback** | WebSockets/SSE for streaming responses |
 | **Dark Mode Support** | Developer-friendly interface with theme toggle |
 | **Accessibility** | WCAG 2.1 AA compliance, keyboard navigation |
 | **Responsive** | Mobile-first, works on tablet and desktop |
 
+---
+
 ## Color System
+
+Use Dell Design System color tokens. The following semantic mappings serve as reference:
 
 ### Light Theme
 
-| Element | Color | Hex |
-|---------|-------|-----|
-| Primary | Blue | `#0ea5e9` |
-| Secondary | Gray | `#6b7280` |
-| Success | Green | `#22c55e` |
-| Warning | Amber | `#f59e0b` |
-| Error | Red | `#ef4444` |
-| Background | White | `#ffffff` |
-| Surface | Gray 50 | `#f9fafb` |
-| Text Primary | Gray 900 | `#111827` |
-| Text Secondary | Gray 500 | `#6b7280` |
+| Element | Purpose | Hex Reference |
+|---------|---------|---------------|
+| Primary | Actions, links | `#0076CE` (Dell Blue) |
+| Secondary | Secondary actions | `#6b7280` |
+| Success | Positive feedback | `#22c55e` |
+| Warning | Caution states | `#f59e0b` |
+| Error | Error states | `#ef4444` |
+| Background | Page background | `#ffffff` |
+| Surface | Cards, panels | `#f9fafb` |
+| Text Primary | Main text | `#111827` |
+| Text Secondary | Supporting text | `#6b7280` |
 
 ### Dark Theme
 
-| Element | Color | Hex |
-|---------|-------|-----|
-| Primary | Sky | `#38bdf8` |
-| Secondary | Gray | `#9ca3af` |
-| Success | Emerald | `#34d399` |
-| Warning | Amber | `#fbbf24` |
-| Error | Rose | `#fb7185` |
-| Background | Gray 950 | `#030712` |
-| Surface | Gray 900 | `#111827` |
-| Text Primary | White | `#ffffff` |
-| Text Secondary | Gray 400 | `#9ca3af` |
+| Element | Purpose | Hex Reference |
+|---------|---------|---------------|
+| Primary | Actions, links | `#38bdf8` |
+| Secondary | Secondary actions | `#9ca3af` |
+| Success | Positive feedback | `#34d399` |
+| Warning | Caution states | `#fbbf24` |
+| Error | Error states | `#fb7185` |
+| Background | Page background | `#030712` |
+| Surface | Cards, panels | `#111827` |
+| Text Primary | Main text | `#ffffff` |
+| Text Secondary | Supporting text | `#9ca3af` |
+
+---
 
 ## Typography
 
+Use Dell Design System typography tokens. Reference scales:
+
 | Element | Font | Size | Weight |
 |---------|------|------|--------|
-| H1 | Inter | 30px | 700 |
-| H2 | Inter | 24px | 600 |
-| H3 | Inter | 20px | 600 |
-| Body | Inter | 14px | 400 |
-| Code | JetBrains Mono | 13px | 400 |
-| Caption | Inter | 12px | 400 |
+| H1 | System | 30px | 700 |
+| H2 | System | 24px | 600 |
+| H3 | System | 20px | 600 |
+| Body | System | 14px | 400 |
+| Code | Monospace | 13px | 400 |
+| Caption | System | 12px | 400 |
+
+---
+
+## Responsive Breakpoints
+
+| Breakpoint | Width | Layout Changes |
+|------------|-------|----------------|
+| Mobile | <640px | Single column, collapsed sidebar, bottom navigation |
+| Tablet | 640-1024px | Two columns, mini sidebar |
+| Desktop | >1024px | Full layout with expanded sidebar |
+
+---
+
+## Navigation
+
+### Global Header
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  PromptOps    [Dashboard] [Playground] [Workflows] [Analytics]    👤 User ▾ │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Logo** (left): PromptOps branding
+- **Navigation** (center): Dashboard | Playground | Workflows | Analytics
+- **User Menu** (right): Settings, Admin Panel (if admin), Logout
+
+### Navigation Flow
+
+```
+Login → Dashboard → Playground → Workflow Builder → Analytics → Admin Panel
+```
+
+Each screen has a persistent top navigation bar for quick switching.
+
+---
 
 ## Main Screens
 
 ### 1. Dashboard
 
-**Purpose**: Overview of system health, usage, and quick access to recent items.
+**Purpose**: Overview of system health, usage metrics, and quick access to recent items.
+
+**Layout**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -92,17 +148,28 @@
 ```
 
 **Components**:
-- KPI Cards: 4 top-level metrics with trend indicators
-- Line Chart: Executions over time
-- Bar Chart: Model usage breakdown
-- Recent Items List: Quick access to recent prompts
-- Active Workflows: Status of running workflows
+
+| Component | Description |
+|-----------|-------------|
+| KPI Cards | 4 top-level metrics with trend indicators (Total Prompts, Executions Today, Avg Latency, Monthly Cost) |
+| Line Chart | Token usage/executions over time |
+| Bar Chart | Model performance comparison |
+| Recent Items | Quick access to recently edited prompts |
+| Active Workflows | Status of running workflows |
+
+**User Flow**:
+1. User logs in → lands on Dashboard
+2. Click KPIs or charts → navigate to detailed analytics
+3. Click recent prompt → open in Playground
+4. Click workflow → open in Workflow Builder
 
 ---
 
 ### 2. Prompt Playground
 
-**Purpose**: Create, edit, and test prompts with real-time feedback.
+**Purpose**: Create, edit, and test prompts interactively with real-time feedback.
+
+**Layout**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -152,19 +219,37 @@
 ```
 
 **Components**:
-- Prompt Editor: Monaco editor with syntax highlighting for `{{variables}}`
-- Model Selector: Dropdown with all registered models
-- Parameters Panel: Temperature, max tokens, etc.
-- Variables Panel: Dynamic variable input
-- Response Panel: Streaming output display
-- Metrics Bar: Token count, cost, latency
-- Action Bar: Run, Save, Evaluate, A/B Test, Deploy
+
+| Component | Description |
+|-----------|-------------|
+| Prompt Editor | Monaco editor with syntax highlighting for `{{variables}}` |
+| Model Selector | Dropdown with all registered models |
+| Parameters Panel | Temperature, Max Tokens, Top-p sliders/inputs |
+| Variables Panel | Dynamic variable input fields |
+| Response Panel | Streaming output display with cursor |
+| Metrics Bar | Token count (in/out), estimated cost, latency |
+| Action Bar | History, Run, Evaluate, A/B Test, Deploy |
+
+**Bottom Tabs**:
+- **History**: Previous executions of this prompt
+- **Versions**: Version history with diff view
+- **Notes**: Collaboration notes and comments
+
+**User Flow**:
+1. User selects or creates a prompt
+2. Write/edit system and user prompts
+3. Configure model and parameters
+4. Fill in variable values
+5. Click **Run Prompt** → see streaming response
+6. Review metrics → save prompt for future use
 
 ---
 
 ### 3. Workflow Builder
 
-**Purpose**: Visual drag-and-drop interface for LangGraph orchestration.
+**Purpose**: Visual drag-and-drop interface for creating multi-step AI workflows using LangGraph orchestration.
+
+**Layout**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -218,28 +303,42 @@
 ```
 
 **Components**:
-- Node Palette: Draggable node types
-- Canvas: React Flow based graph editor
-- Node Config Panel: Edit selected node properties
-- Mini-map: Overview navigation
-- Toolbar: Validate, test, save, deploy actions
-- Zoom controls: Canvas navigation
+
+| Component | Description |
+|-----------|-------------|
+| Node Palette | Draggable node types (left sidebar) |
+| Canvas | React Flow based graph editor |
+| Node Config Panel | Edit selected node properties |
+| Mini-map | Overview navigation (bottom-right) |
+| Toolbar | Validate, Test Run, Save, Deploy actions |
+| Zoom Controls | Canvas zoom and pan navigation |
 
 **Node Types**:
+
 | Node | Icon | Description |
 |------|------|-------------|
 | Prompt | 📝 | Execute a prompt template |
-| Condition | ◇ | If/else branching |
+| Condition | ◇ | If/else branching logic |
 | Loop | 🔄 | Iterate with condition |
 | Parallel | ⫘ | Run nodes concurrently |
-| Tool | 🔧 | External function call |
-| Human | 👤 | Human-in-the-loop approval |
+| Tool | 🔧 | External function/API call |
+| Human Review | 👤 | Human-in-the-loop approval |
+
+**User Flow**:
+1. User drags nodes from palette to canvas
+2. Connect nodes to define flow logic
+3. Click node → configure in properties panel
+4. Click **Validate** → check for errors
+5. Click **Test Run** → execute with test data
+6. Save or Deploy when ready
 
 ---
 
 ### 4. Analytics Dashboard
 
-**Purpose**: Metrics, A/B test results, and cost analysis.
+**Purpose**: Provide insights into prompt performance, A/B test results, and cost optimization.
+
+**Layout**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -287,19 +386,42 @@
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+**Tabs**:
+
+| Tab | Content |
+|-----|---------|
+| Overview | High-level metrics and trends |
+| A/B Tests | Active and completed experiments |
+| Cost Analysis | Cost breakdown by model, prompt, team |
+| Evaluations | LLM-as-judge evaluation results |
+
 **Components**:
-- Time Series Chart: Executions, latency, errors over time
-- Leaderboard: Top prompts by usage
-- Model Comparison Table: Performance and cost metrics
-- A/B Test Cards: Active tests with significance indicators
-- Date Range Selector: Filter data by time period
-- Export Options: CSV, PDF download
+
+| Component | Description |
+|-----------|-------------|
+| Filters | Date range, Model, Prompt version, Team |
+| Time Series Chart | Executions, latency, errors over time |
+| Leaderboard | Top prompts by usage |
+| Model Comparison Table | Performance and cost metrics by model |
+| A/B Test Cards | Active tests with significance indicators |
+| Date Range Selector | Filter data by time period |
+| Export Options | CSV, PDF download |
+
+**User Flow**:
+1. User navigates to Analytics
+2. Select tab (Overview, A/B Tests, etc.)
+3. Apply filters (date range, model, prompt)
+4. View charts and tables
+5. Click on prompt → detailed analysis
+6. Export data if needed
 
 ---
 
 ### 5. Admin Panel
 
-**Purpose**: User management, model configuration, organization settings.
+**Purpose**: Manage users, roles, model configurations, and system settings.
+
+**Layout**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -340,29 +462,46 @@
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+**Sidebar Sections**:
+
+| Section | Description |
+|---------|-------------|
+| Users | User management, invite, role assignment |
+| Models | Register and configure AI models |
+| API Keys | Generate, view, revoke API keys |
+| Billing | Usage tracking, payment info, cost limits |
+| Audit Log | Activity history, security events |
+| Resource Allocation | Team quotas and limits |
+
 **Components**:
-- Sidebar Navigation: Settings categories
-- User Table: CRUD operations, role assignment
-- Model Registry: Add/configure AI models
-- API Key Management: Generate, revoke keys
-- Billing: Usage and payment info
-- Audit Log: Activity history
 
-## Responsive Breakpoints
+| Component | Description |
+|-----------|-------------|
+| Sidebar Navigation | Settings category navigation |
+| User Table | CRUD operations with role assignment |
+| Model Registry | Add/configure AI models with connection testing |
+| API Key Manager | Generate, copy, revoke keys |
+| Billing Dashboard | Usage charts, invoice history |
+| Audit Log Table | Filterable activity history |
 
-| Breakpoint | Width | Layout Changes |
-|------------|-------|----------------|
-| Mobile | <640px | Single column, collapsed sidebar |
-| Tablet | 640-1024px | Two columns, mini sidebar |
-| Desktop | >1024px | Full layout with expanded sidebar |
+**User Flow**:
+1. Admin navigates to Admin Panel
+2. Select section from sidebar
+3. View/manage users, models, or settings
+4. Add new user → send invite → assign role
+5. Review audit logs for security monitoring
+
+---
 
 ## Component Library
+
+All components should use Dell Design System equivalents. The following patterns serve as reference:
 
 ### Buttons
 
 ```
-Primary:    [████████████]  Filled blue, white text
-Secondary:  [░░░░░░░░░░░░]  Gray outline, dark text
+Primary:    [████████████]  Filled primary color, white text
+Secondary:  [░░░░░░░░░░░░]  Outline style, dark text
 Ghost:      [            ]  No background, hover state
 Danger:     [████████████]  Filled red, white text
 ```
@@ -415,9 +554,13 @@ Toggle:     ○────●  ON     ●────○  OFF
 └─────────────────────────────────────────────────────┘
 ```
 
+---
+
 ## Loading States
 
 ### Skeletons
+
+Use skeleton loaders for content that is loading:
 
 ```
 ┌─────────────────────────────────────┐
@@ -437,9 +580,11 @@ Toggle:     ○────●  ON     ●────○  OFF
 ⠸ Loading...
 ```
 
-## Error States
+---
 
-### Empty State
+## Empty States
+
+When no data is available, show helpful empty states:
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -455,7 +600,11 @@ Toggle:     ○────●  ON     ●────○  OFF
 └─────────────────────────────────────────────────────┘
 ```
 
-### Error Message
+---
+
+## Error States
+
+Display clear error messages with recovery actions:
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -467,11 +616,27 @@ Toggle:     ○────●  ON     ●────○  OFF
 └─────────────────────────────────────────────────────┘
 ```
 
+---
+
 ## Accessibility
 
-- All interactive elements keyboard accessible
-- Focus indicators visible
-- Color contrast ratio minimum 4.5:1
-- Screen reader labels on icons
-- Skip navigation link
-- Reduced motion support
+| Requirement | Implementation |
+|-------------|----------------|
+| Keyboard Navigation | All interactive elements accessible via Tab/Enter |
+| Focus Indicators | Visible focus rings on interactive elements |
+| Color Contrast | Minimum 4.5:1 ratio for text |
+| Screen Reader Labels | aria-labels on icons and interactive elements |
+| Skip Navigation | Skip link to main content |
+| Reduced Motion | Respect `prefers-reduced-motion` preference |
+| WCAG 2.1 AA | Full compliance required |
+
+---
+
+## Real-Time Features
+
+| Feature | Implementation |
+|---------|----------------|
+| Streaming Responses | WebSocket or SSE for token-by-token display |
+| Live Metrics | Real-time cost and token count updates |
+| Workflow Status | Live status updates for running workflows |
+| Collaboration | Real-time presence indicators (future) |
